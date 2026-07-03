@@ -2,8 +2,7 @@ import streamlit as st
 from google import genai
 
 # ✅ Read API key safely from Streamlit Secrets
-client = genai.Client(api_key="["AQ.Ab8RN6JuzUng6A4Fc5VBVxWOY4JKqOc6ph9lcw_NqBJ0F9qaFQ"])
-
+client = genai.Client(api_key="AQ.Ab8RN6JuzUng6A4Fc5VBVxWOY4JKqOc6ph9lcw_NqBJ0F9qaFQ")
 st.set_page_config(page_title="AI Learning Buddy", page_icon="🎓")
 
 st.title("🎓 AI Learning Buddy (Capstone Project)")
