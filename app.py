@@ -1,14 +1,13 @@
 import streamlit as st
 from google import genai
 
-# 🔑 Put your Gemini API key here
-client = genai.Client(api_key="AQ.Ab8RN6JuzUng6A4Fc5VBVxWOY4JKqOc6ph9lcw_NqBJ0F9qaFQ")
+# ✅ Read API key safely from Streamlit Secrets
+client = genai.Client(api_key=st.secrets["AQ.Ab8RN6JuzUng6A4Fc5VBVxWOY4JKqOc6ph9lcw_NqBJ0F9qaFQ"])
 
 st.set_page_config(page_title="AI Learning Buddy", page_icon="🎓")
 
 st.title("🎓 AI Learning Buddy (Capstone Project)")
-
-st.write("Ask anything and learn with AI!")
+st.write("Your smart AI study assistant powered by Gemini 🚀")
 
 # Input
 topic = st.text_input("Enter your topic or question")
@@ -28,30 +27,35 @@ option = st.selectbox(
 # Button
 if st.button("Generate Response"):
 
-    if topic == "":
-        st.warning("Please enter something!")
+    if not topic:
+        st.warning("Please enter a topic!")
 
     else:
 
         if option == "Explain Concept":
-            prompt = f"Explain {topic} in simple beginner-friendly language."
+            prompt = f"Explain {topic} in simple beginner-friendly language with examples."
 
         elif option == "Real-Life Example":
-            prompt = f"Give a real-life example of {topic}."
+            prompt = f"Give a real-life example of {topic} in simple terms."
 
         elif option == "Generate Quiz":
-            prompt = f"Create 5 MCQs on {topic} with answers."
+            prompt = f"Create 5 multiple-choice questions on {topic} with answers."
 
         elif option == "Summarize Topic":
-            prompt = f"Summarize {topic} in simple bullet points."
+            prompt = f"Summarize {topic} in short bullet points."
 
         else:
-            prompt = f"You are a helpful AI tutor. Answer this question: {topic}"
+            prompt = f"You are a helpful AI tutor. Answer this question clearly: {topic}"
 
-        response = client.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=prompt
-        )
+        try:
+            response = client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=prompt
+            )
 
-        st.markdown("### 🤖 AI Response")
-        st.write(response.text)
+            st.markdown("### 🤖 AI Response")
+            st.write(response.text)
+
+        except Exception as e:
+            st.error("Something went wrong. Please check API key or try again.")
+            st.code(str(e))
