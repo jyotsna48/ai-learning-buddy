@@ -1,50 +1,54 @@
 import streamlit as st
 from google import genai
 
-# ✅ Read API key safely from Streamlit Secrets
-client = genai.Client(api_key=st.secrets["AQ.Ab8RN6L2eTe1Db-3oMeS8XHzCP162JbcE7BWmlpYiRVuXbPhOg"])
-st.set_page_config(page_title="AI Learning Buddy", page_icon="🎓")
+# Replace with your NEW Gemini API key (only for testing)
+API_KEY = "AQ.Ab8RN6L2eTe1Db-3oMeS8XHzCP162JbcE7BWmlpYiRVuXbPhOg"
 
-st.title("🎓 AI Learning Buddy (Capstone Project)")
-st.write("Your smart AI study assistant powered by Gemini 🚀")
+client = genai.Client(api_key=API_KEY)
 
-# Input
-topic = st.text_input("Enter your topic or question")
+st.set_page_config(
+    page_title="AI Learning Buddy",
+    page_icon="🎓",
+    layout="centered"
+)
 
-# Feature selection
+st.title("🎓 AI Learning Buddy")
+st.write("Learn any topic with the help of Gemini AI!")
+
+topic = st.text_input("Enter a topic or ask a question")
+
 option = st.selectbox(
-    "Choose what you want",
+    "Choose an option",
     [
         "Explain Concept",
         "Real-Life Example",
         "Generate Quiz",
-        "Doubt Solver (Chat)",
-        "Summarize Topic"
+        "Summarize Topic",
+        "Ask Anything"
     ]
 )
 
-# Button
-if st.button("Generate Response"):
+if st.button("Generate"):
 
-    if not topic:
-        st.warning("Please enter a topic!")
+    if not topic.strip():
+        st.warning("Please enter a topic.")
 
     else:
 
         if option == "Explain Concept":
-            prompt = f"Explain {topic} in simple beginner-friendly language with examples."
+            prompt = f"Explain '{topic}' in simple language for a beginner."
 
         elif option == "Real-Life Example":
-            prompt = f"Give a real-life example of {topic} in simple terms."
+            prompt = f"Give a real-life example of '{topic}'."
 
         elif option == "Generate Quiz":
-            prompt = f"Create 5 multiple-choice questions on {topic} with answers."
+            prompt = f"Create 5 multiple-choice questions on '{topic}' with answers."
 
         elif option == "Summarize Topic":
-            prompt = f"Summarize {topic} in short bullet points."
+            prompt = f"Summarize '{topic}' in bullet points."
 
         else:
-            prompt = f"You are a helpful AI tutor. Answer this question clearly: {topic}"
+            prompt = topic
 
         try:
             response = client.models.generate_content(
@@ -52,9 +56,8 @@ if st.button("Generate Response"):
                 contents=prompt
             )
 
-            st.markdown("### 🤖 AI Response")
+            st.subheader("🤖 AI Response")
             st.write(response.text)
 
         except Exception as e:
-            st.error("Something went wrong. Please check API key or try again.")
-            st.code(str(e))
+            st.error(f"Error: {e}")
