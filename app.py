@@ -1,19 +1,23 @@
 import streamlit as st
-from google import genai
+import google.generativeai as genai
 
-API_KEY = "AQ.Ab8RN6L2eTe1Db-3oMeS8XHzCP162JbcE7BWmlpYiRVuXbPhOg"
+# Replace with your NEW Gemini API key
+genai.configure(api_key="AQ.Ab8RN6L2eTe1Db-3oMeS8XHzCP162JbcE7BWmlpYiRVuXbPhOg")
 
-st.title("Gemini Test")
+model = genai.GenerativeModel("gemini-1.5-flash")
 
-try:
-    client = genai.Client(api_key=API_KEY)
+st.set_page_config(page_title="AI Learning Buddy", page_icon="🎓")
 
-    response = client.models.generate_content(
-        model="gemini-2.5-flash",
-        contents="Say Hello"
-    )
+st.title("🎓 AI Learning Buddy")
 
-    st.success(response.text)
+question = st.text_input("Ask anything")
 
-except Exception as e:
-    st.error(str(e))
+if st.button("Generate"):
+    if question.strip():
+        try:
+            response = model.generate_content(question)
+            st.write(response.text)
+        except Exception as e:
+            st.error(str(e))
+    else:
+        st.warning("Please enter a question.")
